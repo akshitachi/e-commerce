@@ -1,3 +1,4 @@
+import 'package:flutter/gestures.dart';
 import 'package:provider/provider.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class AuthCard extends StatefulWidget {
 class _AuthCardState extends State<AuthCard>
     with SingleTickerProviderStateMixin {
   final GlobalKey<FormState> _formKey = GlobalKey();
-  AuthMode _authMode = AuthMode.Login;
+  AuthMode _authMode = AuthMode.Signup;
   Map<String, String> _authData = {
     'email': '',
     'password': '',
@@ -53,6 +54,7 @@ class _AuthCardState extends State<AuthCard>
   AnimationController _controller;
   Animation<Offset> _slideAnimation;
   Animation<double> _opacityAnimation;
+  final _confirmPasswordController = TextEditingController();
   bool _passwordVisible;
 
   @override
@@ -115,7 +117,6 @@ class _AuthCardState extends State<AuthCard>
     try {
       if (_authMode == AuthMode.Login) {
         await Provider.of<Auth>(context, listen: false).logIn(
-          
           _authData['email'],
           _authData['password'],
         );
@@ -124,7 +125,6 @@ class _AuthCardState extends State<AuthCard>
       } else {
         // Sign user up
         await Provider.of<Auth>(context, listen: false).signUP(
-          
           _authData['email'],
           _authData['password'],
         );
@@ -276,6 +276,14 @@ class _AuthCardState extends State<AuthCard>
                                 ),
                                 labelText: 'Mobile Number'),
                             keyboardType: TextInputType.phone,
+                            validator: (value) {
+                              if (value.isEmpty ||
+                                  value.length < 10 ||
+                                  value.length > 10) {
+                                return 'Invalid phone number';
+                              }
+                              return null;
+                            },
                             onSaved: (value) {
                               _authData['mobileno'] = value;
                             },
@@ -290,9 +298,7 @@ class _AuthCardState extends State<AuthCard>
                         suffixIcon: IconButton(
                           icon: Icon(
                             _passwordVisible
-                                ? Image.asset(
-                                    'assets/user/eye.png',
-                                  )
+                                ? Icons.visibility
                                 : Icons.visibility_off,
                             color: Theme.of(context).primaryColorDark,
                           ),
@@ -325,92 +331,140 @@ class _AuthCardState extends State<AuthCard>
                     ),
                   ),
                   if (_authMode == AuthMode.Signup)
-                    AnimatedContainer(
-                      constraints: BoxConstraints(
-                        minHeight: _authMode == AuthMode.Signup ? 60 : 0,
-                        maxHeight: _authMode == AuthMode.Signup ? 120 : 0,
-                      ),
-                      duration: Duration(microseconds: 300),
-                      curve: Curves.easeIn,
-                      child: FadeTransition(
-                        opacity: _opacityAnimation,
-                        child: SlideTransition(
-                          position: _slideAnimation,
-                          child: Padding(
-                            padding: const EdgeInsets.all(8.0),
-                            child: TextFormField(
-                              enabled: _authMode == AuthMode.Signup,
-                              decoration: InputDecoration(
-                                labelText: 'Confirm Password',
-                                suffixIcon: IconButton(
-                                  icon: Icon(
-                                    _passwordVisible
-                                        ? Image.asset(
-                                            'assets/user/eye.png',
-                                          )
-                                        : Icons.visibility_off,
-                                    color: Theme.of(context).primaryColorDark,
-                                  ),
-                                  onPressed: () {
-                                    setState(() {
-                                      _passwordVisible = !_passwordVisible;
-                                    });
-                                  },
-                                ),
-                                prefixIcon: Padding(
-                                  padding: const EdgeInsets.all(10.0),
-                                  child: Image.asset(
-                                    'assets/user/lock.png',
-                                    width: 20,
-                                    height: 20,
-                                    fit: BoxFit.fill,
-                                  ),
-                                ),
-                              ),
-                              obscureText: !_passwordVisible,
-                              validator: _authMode == AuthMode.Signup
-                                  ? (value) {
-                                      if (value != _passwordController.text) {
-                                        return 'Passwords do not match!';
-                                      }
-                                    }
-                                  : null,
+                    Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: TextFormField(
+                        decoration: InputDecoration(
+                          labelText: 'Confirm Password',
+                          suffixIcon: IconButton(
+                            icon: Icon(
+                              _passwordVisible
+                                  ? Icons.visibility
+                                  : Icons.visibility_off,
+                              color: Theme.of(context).primaryColorDark,
+                            ),
+                            onPressed: () {
+                              setState(() {
+                                _passwordVisible = !_passwordVisible;
+                              });
+                            },
+                          ),
+                          prefixIcon: Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: Image.asset(
+                              'assets/user/lock.png',
+                              width: 10,
+                              height: 10,
+                              fit: BoxFit.fill,
                             ),
                           ),
                         ),
+                        obscureText: !_passwordVisible,
+                        controller: _confirmPasswordController,
+                        validator: _authMode == AuthMode.Signup
+                            ? (value) {
+                                if (value != _passwordController.text) {
+                                  return 'Passwords do not match';
+                                }
+                              }
+                            : null,
                       ),
                     ),
+                  _authMode == AuthMode.Login
+                      ? FlatButton(
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.end,
+                            children: <Widget>[
+                              Text(
+                                "Use Mobile Number",
+                                textAlign: TextAlign.right,
+                                style: TextStyle(
+                                  color: Theme.of(context).primaryColor,
+                                ),
+                              ),
+                            ],
+                          ),
+                          onPressed: () {},
+                        )
+                      : Container(
+                          height: 0,
+                          width: 0,
+                        ),
                   SizedBox(
                     height: 20,
                   ),
                   if (_isLoading)
                     CircularProgressIndicator()
                   else
-                    SizedBox(
-                      width: double.infinity,
-                      height: 50,
-                      child: RaisedButton(
-                        child: Text(
-                          _authMode == AuthMode.Login ? 'LOGIN' : 'REGISTER',
-                          style: TextStyle(),
-                        ),
-                        onPressed: _submit,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        color: Color(0xffF3AA4E),
-                        textColor: Colors.white,
-                      ),
-                    ),
+                    _authMode == AuthMode.Signup
+                        ? SizedBox(
+                            width: double.infinity,
+                            height: 50,
+                            child: RaisedButton(
+                              child: Text(
+                                'REGISTER',
+                                style: TextStyle(),
+                              ),
+                              onPressed: _submit,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              color: Color(0xffF3AA4E),
+                              textColor: Colors.white,
+                            ),
+                          )
+                        : Text(''),
                   FlatButton(
-                    child: Text(
-                        '${_authMode == AuthMode.Login ? 'SIGNUP' : 'LOGIN'} INSTEAD'),
+                    child: _authMode == AuthMode.Signup
+                        ? RichText(
+                            text: TextSpan(
+                              text: 'Already have an account?',
+                              style: TextStyle(
+                                color: Color(0xff707070),
+                                fontSize: 18,
+                              ),
+                              children: <TextSpan>[
+                                TextSpan(
+                                  text: 'Login',
+                                  style: TextStyle(
+                                      color: Colors.black, fontSize: 18),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = _switchAuthMode,
+                                )
+                              ],
+                            ),
+                          )
+                        : null,
                     onPressed: _switchAuthMode,
                     padding:
                         EdgeInsets.symmetric(horizontal: 30.0, vertical: 4),
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     textColor: Colors.black,
                   ),
+                  _authMode == AuthMode.Login
+                      ? Align(
+                          alignment: Alignment.bottomCenter,
+                          child: SizedBox(
+                            width: double.infinity,
+                            height: 60,
+                            child: RaisedButton(
+                              child: Text(
+                                'Login',
+                                style: TextStyle(),
+                              ),
+                              onPressed: _submit,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(10),
+                              ),
+                              color: Color(0xffF3AA4E),
+                              textColor: Colors.white,
+                            ),
+                          ),
+                        )
+                      : Container(
+                          height: 0,
+                          width: 0,
+                        ),
                 ],
               ),
             ),

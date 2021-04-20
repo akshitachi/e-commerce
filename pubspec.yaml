@@ -27,6 +27,7 @@ dependencies:
   http: ^0.13.1
   provider: ^5.0.0
   shared_preferences: ^2.0.5
+  introduction_screen: ^2.1.0
 
 dev_dependencies:
   flutter_test:
@@ -48,7 +49,7 @@ flutter:
     - assets/user/lock.png
     - assets/user/person-24px (1).png
     - assets/user/phone-24px.png
-    - assets/user/Rectangle 23.png
+    - assets/user/Rectangle.png
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
   # For details regarding adding assets from package dependencies, see
