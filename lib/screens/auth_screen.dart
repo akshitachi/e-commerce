@@ -183,7 +183,7 @@ class _AuthCardState extends State<AuthCard>
                     'Register to get started',
                     style: TextStyle(
                       color: Color(0xff707070),
-                      fontSize: 25,
+                      fontSize: 20,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -194,7 +194,7 @@ class _AuthCardState extends State<AuthCard>
                     'Log in to get started',
                     style: TextStyle(
                       color: Color(0xff707070),
-                      fontSize: 25,
+                      fontSize: 20,
                       fontWeight: FontWeight.w300,
                     ),
                   ),
@@ -203,7 +203,7 @@ class _AuthCardState extends State<AuthCard>
             'Experience the all new App!',
             style: TextStyle(
               color: Color(0xff707070),
-              fontSize: 25,
+              fontSize: 20,
               fontWeight: FontWeight.w300,
             ),
           ),
@@ -414,11 +414,14 @@ class _AuthCardState extends State<AuthCard>
                             ),
                           )
                         : Text(''),
+                  SizedBox(
+                    height: 20,
+                  ),
                   FlatButton(
                     child: _authMode == AuthMode.Signup
                         ? RichText(
                             text: TextSpan(
-                              text: 'Already have an account?',
+                              text: 'Already have an account? ',
                               style: TextStyle(
                                 color: Color(0xff707070),
                                 fontSize: 18,
@@ -441,24 +444,25 @@ class _AuthCardState extends State<AuthCard>
                     materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
                     textColor: Colors.black,
                   ),
+                  if (_authMode == AuthMode.Login)
+                    Divider(
+                      thickness: 3,
+                    ),
                   _authMode == AuthMode.Login
-                      ? Align(
-                          alignment: Alignment.bottomCenter,
-                          child: SizedBox(
-                            width: double.infinity,
-                            height: 60,
-                            child: RaisedButton(
-                              child: Text(
-                                'Login',
-                                style: TextStyle(),
-                              ),
-                              onPressed: _submit,
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              color: Color(0xffF3AA4E),
-                              textColor: Colors.white,
+                      ? SizedBox(
+                          width: double.infinity,
+                          height: 60,
+                          child: RaisedButton(
+                            child: Text(
+                              'Login',
+                              style: TextStyle(),
                             ),
+                            onPressed: _submit,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            color: Color(0xffF3AA4E),
+                            textColor: Colors.white,
                           ),
                         )
                       : Container(
