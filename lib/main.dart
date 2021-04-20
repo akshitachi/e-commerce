@@ -13,19 +13,20 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
-        providers: [
-          ChangeNotifierProvider.value(
-            value: Auth(),
-          ),
-        ],
-        child: Consumer<Auth>(
-          builder: (ctx, auth, _) => MaterialApp(
-              title: 'E-Commerce',
-              theme: ThemeData(
-                primarySwatch: Colors.orange,
-              ),
-              home: auth.isAuth ? ProductScreen() : AuthScreen(),
-              routes: {}),
-        ));
+      providers: [
+        ChangeNotifierProvider.value(
+          value: Auth(),
+        ),
+      ],
+      child: Consumer<Auth>(
+        builder: (ctx, auth, _) => MaterialApp(
+            title: 'E-Commerce',
+            theme: ThemeData(
+              primarySwatch: Colors.orange,
+            ),
+            home: ProductScreen(),
+            routes: {}),
+      ),
+    );
   }
 }

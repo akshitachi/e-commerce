@@ -11,8 +11,13 @@ class _ProductScreenState extends State<ProductScreen> {
 
   Widget _buildImage(String assetName) {
     return Align(
-      child: Image.asset('assets/user/$assetName.png', width: 150.0),
-      alignment: Alignment.center,
+      child: Image.asset(
+        'assets/user/$assetName.png',
+        fit: BoxFit.cover,
+        height: double.infinity,
+        width: double.infinity,
+        alignment: Alignment.center,
+      ),
     );
   }
 
@@ -26,60 +31,121 @@ class _ProductScreenState extends State<ProductScreen> {
       pageColor: Colors.white,
       imagePadding: EdgeInsets.zero,
     );
-    return Scaffold(
-      body: IntroductionScreen(
-        key: introKey,
-        pages: [
-          PageViewModel(
-            title: "",
-            body: '',
-            image: _buildImage(
-              'Rectangle',
+    return SafeArea(
+      child: Scaffold(
+        body: IntroductionScreen(
+          globalFooter: SizedBox(
+            width: double.infinity,
+            height: 60,
+            child: Row(
+              children: [
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 5,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: FlatButton(
+                      height: 60,
+                      color: Colors.white,
+                      child: const Text(
+                        'Add to cart',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.black,
+                        ),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    decoration: BoxDecoration(
+                      boxShadow: <BoxShadow>[
+                        BoxShadow(
+                          color: Colors.black,
+                          blurRadius: 5,
+                          offset: Offset(0, 2),
+                        ),
+                      ],
+                    ),
+                    child: FlatButton(
+                      height: 60,
+                      color: Color(0xffF3AA4E),
+                      child: const Text(
+                        'Buy Now',
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          color: Colors.white,
+                        ),
+                      ),
+                      onPressed: () {},
+                    ),
+                  ),
+                ),
+              ],
             ),
-            decoration: pageDecoration,
           ),
-          PageViewModel(
-            title: "",
-            body: "",
-            image: _buildImage('Rectangle'),
-            decoration: pageDecoration,
-          ),
-          PageViewModel(
-            title: "",
-            body: "",
-            image: _buildImage('Rectangle'),
-            decoration: pageDecoration,
-          ),
-          PageViewModel(
-            title: "",
-            body: "",
-            image: _buildImage('Rectangle'),
-            decoration: pageDecoration,
-          ),
-        ],
+          key: introKey,
+          pages: [
+            PageViewModel(
+              title: "",
+              body: '',
+              image: _buildImage(
+                'Rectangle',
+              ),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "",
+              body: "",
+              image: _buildImage('Rectangle'),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "",
+              body: "",
+              image: _buildImage('Rectangle'),
+              decoration: pageDecoration,
+            ),
+            PageViewModel(
+              title: "",
+              body: "",
+              image: _buildImage('Rectangle'),
+              decoration: pageDecoration,
+            ),
+          ],
 
-        onDone: () => {},
-        showNextButton: false,
-        showDoneButton: false,
-        skipFlex: 8,
-        nextFlex: 15,
+          onDone: () => {},
+          showNextButton: false,
+          showDoneButton: false,
+          skipFlex: 8,
+          nextFlex: 15,
 
-        // skip: const Text('Skip'),
-        done: const Icon(
-          Icons.arrow_forward,
-          color: Colors.grey,
-        ),
-        // onSkip: () {},
-        // showSkipButton: true,
-        dotsFlex: 0,
+          // skip: const Text('Skip'),
+          done: const Icon(
+            Icons.arrow_forward,
+            color: Colors.grey,
+          ),
+          // onSkip: () {},
+          // showSkipButton: true,
+          dotsFlex: 0,
 
-        next: const Icon(Icons.arrow_forward),
-        dotsDecorator: DotsDecorator(
-          size: Size(7.0, 8.0),
-          color: Color(0xFFBDBDBD),
-          activeSize: Size(22.0, 9.0),
-          activeShape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.all(Radius.circular(20.0)),
+          next: const Icon(Icons.arrow_forward),
+          dotsDecorator: DotsDecorator(
+            size: Size(7.0, 8.0),
+            color: Color(0xFFBDBDBD),
+            activeColor: Colors.grey,
+            activeSize: Size(22.0, 9.0),
+            activeShape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(20.0)),
+            ),
           ),
         ),
       ),
